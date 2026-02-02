@@ -1,0 +1,8 @@
+// Variables (module system) - must come before any other rules
+@use 'variables' as *;
+
+// Bootstrap (module system)
+@use 'bootstrap/scss/bootstrap';
+
+// Fonts
+@import url('https://fonts.bunny.net/css?family=Nunito');

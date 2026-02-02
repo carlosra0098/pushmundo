@@ -1,0 +1,154 @@
+/* CRMundo Custom Branding */
+
+html,
+body {
+    background-color: #333c87 !important;
+}
+
+.wrapper {
+    background-color: #333c87 !important;
+}
+
+.content-wrapper {
+    background-color: #333c87 !important;
+    min-height: 100vh;
+}
+
+.main-content {
+    background-color: #333c87 !important;
+}
+
+/* Sidebar black background */
+.main-sidebar {
+    background-color: #000000 !important;
+    background: #000000 !important;
+}
+
+.sidebar {
+    background-color: #000000 !important;
+    background: #000000 !important;
+}
+
+.sidebar-dark {
+    background-color: #000000 !important;
+}
+
+/* Text visibility on dark sidebar */
+.sidebar-dark .nav-sidebar > .nav-item > .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.sidebar-dark .nav-sidebar > .nav-item > .nav-link:hover {
+    color: rgba(255, 255, 255, 1) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.sidebar-dark .nav-sidebar > .nav-item.menu-open > .nav-link,
+.sidebar-dark .nav-sidebar > .nav-item > .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Ensure breadcrumb and headers have good contrast */
+.content-header {
+    background-color: transparent !important;
+}
+
+.navbar-white {
+    background-color: #f8f9fa !important;
+}
+
+/* CRM spacing and consistency utilities */
+:root{
+    --crm-space-1: .5rem; /* small */
+    --crm-space-2: 1rem;   /* base */
+    --crm-space-3: 1.5rem; /* large */
+}
+
+/* Global card spacing */
+.crm-card, .card { 
+    margin-bottom: var(--crm-space-2) !important;
+}
+
+.crm-card .card-body,
+.card .card-body{
+    padding: var(--crm-space-2) !important;
+}
+
+/* Tab content padding */
+.crm-tab-pane { 
+    padding: var(--crm-space-2) !important;
+}
+
+/* Form spacing */
+.form-group { 
+    margin-bottom: var(--crm-space-2) !important;
+}
+
+/* Consistent buttons */
+.btn{ 
+    border-radius: .375rem !important;
+}
+
+/* Navbar user & toggler spacing */
+.navbar .nav-link img.user-image{ 
+    width: 36px; height:36px; object-fit:cover;
+}
+
+/* Nav pills spacing */
+.nav-pills .nav-link { 
+    margin-right: .5rem; 
+    padding: .5rem .75rem;
+}
+
+.nav-pills .nav-link.active{
+    background-color: #333c87 !important;
+    color: #fff !important;
+}
+
+/* Small utilities */
+.crm-gap{ gap: var(--crm-space-2); }
+
+/* Responsive adjustments */
+@media (max-width: 768px){
+    .crm-tab-pane{ padding: .75rem !important; }
+}
+
+/* Card shape, shadows and table spacing for consistent look */
+.crm-card{
+    border-radius: 8px !important;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08) !important;
+    overflow: hidden;
+}
+
+.table th, .table td{
+    vertical-align: middle;
+    padding-top: .75rem !important;
+    padding-bottom: .75rem !important;
+}
+
+/* Action button spacing */
+.btn-group, .action-btns{ display: inline-flex; gap: .5rem; }
+
+/* Ensure consistent hover for rows */
+.table-hover tbody tr:hover{ background-color: rgba(0,0,0,0.03); }
+
+/* Profile-specific styling */
+.profile-actions a.btn { min-width: 120px; }
+.profile-actions a.btn-primary { background-color: #333c87; border-color: #333c87; }
+.profile-activity .list-group-item { border: none; border-bottom: 1px solid rgba(0,0,0,0.04); }
+.profile-activity .list-group-item:last-child { border-bottom: none; }
+
+/* Ensure widget image doesn't overlap adjacent cards */
+.widget-user + .crm-card,
+.widget-user + .card { margin-top: 3.5rem !important; }
+
+/* Stats boxes */
+.profile-stats .bg-dark{ background-color: rgba(0,0,0,0.15) !important; }
+.profile-stats .h4 { font-weight: 700; }
+
+@media (max-width: 576px){
+    .profile-actions { display: flex; gap: .5rem; margin-top: .5rem; }
+    .widget-user + .crm-card { margin-top: 1.5rem !important; }
+}
+
