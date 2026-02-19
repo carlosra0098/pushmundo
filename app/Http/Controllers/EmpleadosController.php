@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empleados;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class EmpleadosController extends Controller
 {
@@ -58,6 +59,10 @@ class EmpleadosController extends Controller
 
     public function destroy(Empleados $empleado)
     {
+        if (auth()->check() && Gate::denies('delete-records')) {
+            abort(403, 'No tienes permisos para eliminar.');
+        }
+
         $empleado->delete();
         return redirect()->route('empleados.index')->with('success', 'Empleado eliminado.');
     }
@@ -77,6 +82,10 @@ class EmpleadosController extends Controller
 
     public function forzarEliminar($id)
     {
+        if (auth()->check() && Gate::denies('delete-records')) {
+            abort(403, 'No tienes permisos para eliminar.');
+        }
+
         $empleado = Empleados::onlyTrashed()->findOrFail($id);
         $empleado->forceDelete();
         return redirect()->route('empleados.eliminados')->with('success', 'Empleado eliminado permanentemente.');

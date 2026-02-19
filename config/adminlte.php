@@ -323,6 +323,13 @@ return [
             'active' => ['profile*'],
         ],
         [
+            'text' => 'Usuarios y Roles',
+            'url' => 'usuarios',
+            'icon' => 'fas fa-fw fa-user-shield',
+            'active' => ['usuarios*'],
+            'can' => 'delete-records',
+        ],
+        [
             'text' => 'Clientes',
             'url' => 'clientes',
             'icon' => 'fas fa-fw fa-users',

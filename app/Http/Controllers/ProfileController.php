@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Clientes;
 use App\Models\Productos;
 use App\Models\Facturas;
@@ -41,18 +42,30 @@ class ProfileController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,'.$user->id,
-            'avatar' => 'nullable|image|max:2048',
+            'avatar' => 'nullable|file|mimes:jpg,jpeg,png,webp,gif|max:3072',
+        ], [
+            'avatar.mimes' => 'El avatar debe estar en formato JPG, JPEG, PNG, WEBP o GIF.',
+            'avatar.max' => 'El avatar no puede superar 3MB.',
         ]);
 
         // Handle avatar upload
         if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $path = $file->store('avatars', 'public');
+            $path = $request->file('avatar')->store('avatars', 'public');
 
             // Delete old avatar if present
             if (! empty($user->avatar)) {
                 try {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+                    $oldPath = ltrim((string) $user->avatar, '/');
+
+                    if (str_starts_with($oldPath, 'storage/')) {
+                        $oldPath = substr($oldPath, 8);
+                    }
+
+                    if (str_starts_with($oldPath, 'public/')) {
+                        $oldPath = substr($oldPath, 7);
+                    }
+
+                    Storage::disk('public')->delete($oldPath);
                 } catch (\Exception $e) {
                     // ignore
                 }

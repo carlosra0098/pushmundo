@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Modelo de Productos
@@ -19,6 +20,8 @@ class Productos extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
+        'imagen',
+        'archivo_pdf',
         'precio',
         'proveedor_id',
         'stock',
@@ -46,5 +49,53 @@ class Productos extends Model
     {
         return $query->where('nombre', 'like', "%{$search}%")
                      ->orWhere('codigo', 'like', "%{$search}%");
+    }
+
+    public function getImagenUrlAttribute(): ?string
+    {
+        if (empty($this->imagen)) {
+            return null;
+        }
+
+        $path = ltrim((string) $this->imagen, '/');
+        $path = str_replace('\\', '/', $path);
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, 'storage/')) {
+            return '/' . $path;
+        }
+
+        if (str_starts_with($path, 'public/')) {
+            $path = substr($path, 7);
+        }
+
+        return '/storage/' . ltrim($path, '/');
+    }
+
+    public function getArchivoPdfUrlAttribute(): ?string
+    {
+        if (empty($this->archivo_pdf)) {
+            return null;
+        }
+
+        $path = ltrim((string) $this->archivo_pdf, '/');
+        $path = str_replace('\\', '/', $path);
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, 'storage/')) {
+            return '/' . $path;
+        }
+
+        if (str_starts_with($path, 'public/')) {
+            $path = substr($path, 7);
+        }
+
+        return '/storage/' . ltrim($path, '/');
     }
 }

@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -65,8 +66,7 @@ class User extends Authenticatable
     public function adminlte_image()
     {
         if (! empty($this->avatar)) {
-            // Use public disk path
-            return Storage::disk('public')->url($this->avatar);
+            return $this->avatar_url;
         }
 
         $email = strtolower(trim($this->email ?? ''));
@@ -82,5 +82,48 @@ class User extends Authenticatable
     public function adminlte_desc()
     {
         return $this->email ?? '';
+    }
+
+    /**
+     * Obtiene URL pública normalizada del avatar.
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (empty($this->avatar)) {
+            return null;
+        }
+
+        $path = ltrim((string) $this->avatar, '/');
+        $path = str_replace('\\', '/', $path);
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, 'storage/')) {
+            return '/' . $path;
+        }
+
+        if (str_starts_with($path, 'public/')) {
+            $path = substr($path, 7);
+        }
+
+        return '/storage/' . ltrim($path, '/');
+    }
+
+    /**
+     * Determina si el usuario es administrador.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Determina si puede eliminar registros.
+     */
+    public function canDeleteRecords(): bool
+    {
+        return $this->isAdmin();
     }
 }

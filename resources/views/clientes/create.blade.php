@@ -34,7 +34,7 @@
             <h5 class="mb-0">Información del Cliente</h5>
         </div>
         <div class="card-body">
-            <form action="{{ route('clientes.store') }}" method="POST" novalidate>
+            <form action="{{ route('clientes.store') }}" method="POST" enctype="multipart/form-data" novalidate>
                 @csrf
 
                 <div class="row">
@@ -130,6 +130,21 @@
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                     <small class="form-text text-muted">Campo opcional</small>
+                </div>
+
+                <div class="mb-3">
+                    <label for="foto" class="form-label">
+                        <strong>Foto del cliente</strong>
+                    </label>
+                    <input type="file"
+                           class="form-control @error('foto') is-invalid @enderror"
+                           id="foto"
+                           name="foto"
+                           accept=".jpg,.jpeg,.png,.webp,image/*">
+                    @error('foto')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                    <small class="form-text text-muted">Formato JPG, JPEG, PNG o WEBP (máximo 2MB).</small>
                 </div>
 
                 <div class="row mt-4">

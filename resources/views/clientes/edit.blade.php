@@ -35,7 +35,7 @@
             <h5 class="mb-0">Información del Cliente</h5>
         </div>
         <div class="card-body">
-            <form action="{{ route('clientes.update', $cliente->id) }}" method="POST" novalidate>
+            <form action="{{ route('clientes.update', $cliente->id) }}" method="POST" enctype="multipart/form-data" novalidate>
                 @csrf
                 @method('PUT')
 
@@ -135,6 +135,26 @@
                     <small class="form-text text-muted">Campo opcional</small>
                 </div>
 
+                <div class="mb-3">
+                    <label for="foto" class="form-label">
+                        <strong>Foto del cliente</strong>
+                    </label>
+                    @if($cliente->foto_url)
+                        <div class="mb-2">
+                            <img src="{{ $cliente->foto_url }}" alt="Foto actual" width="72" height="72" class="rounded-circle object-fit-cover">
+                        </div>
+                    @endif
+                    <input type="file"
+                           class="form-control @error('foto') is-invalid @enderror"
+                           id="foto"
+                           name="foto"
+                           accept=".jpg,.jpeg,.png,.webp,image/*">
+                    @error('foto')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                    <small class="form-text text-muted">Sube una nueva imagen solo si deseas reemplazar la actual.</small>
+                </div>
+
                 <div class="row mt-4">
                     <div class="col-md-12">
                         <div class="d-flex gap-3 align-items-center flex-wrap">
@@ -144,20 +164,24 @@
                             <a href="{{ route('clientes.index') }}" class="btn btn-secondary btn-lg">
                                 <i class="fas fa-times"></i> Cancelar
                             </a>
+                            @can('delete-records')
                             <!-- Botón visible de eliminación (no es un formulario) -->
                             <button type="button" id="deleteBtnVisible" class="btn btn-danger btn-lg">
                                 <i class="fas fa-trash"></i> Eliminar Cliente
                             </button>
+                            @endcan
                         </div>
                     </div>
                 </div>
             </form>
 
+            @can('delete-records')
             <!-- Formulario oculto de eliminación (se envía desde el botón visible) -->
             <form id="deleteForm" action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" style="display:none;">
                 @csrf
                 @method('DELETE')
             </form>
+            @endcan
         </div>
     </div>
 </div>

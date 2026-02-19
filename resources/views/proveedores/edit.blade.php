@@ -6,7 +6,7 @@
 
     <div class="card crm-card mt-3">
         <div class="card-body">
-            <form action="{{ route('proveedores.update', $item) }}" method="POST">
+            <form action="{{ route('proveedores.update', ['proveedor' => $item->id]) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="mb-3">

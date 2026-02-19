@@ -16,7 +16,9 @@
                             <td>{{ $item->contacto }}</td>
                             <td>
                                 <form action="{{ route('proveedores.restaurar', $item->id) }}" method="POST" style="display:inline" class="confirm-restore">@csrf<button class="btn btn-sm btn-success">Restaurar</button></form>
+                                @can('delete-records')
                                 <form action="{{ route('proveedores.forzar-eliminar', $item->id) }}" method="POST" style="display:inline" class="confirm-force">@csrf @method('DELETE')<button class="btn btn-sm btn-danger">Eliminar permanentemente</button></form>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

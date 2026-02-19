@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('plugins.Datatables', true)
+
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -30,12 +32,14 @@
                             <td>{{ $item->nombre }}</td>
                             <td>{{ $item->contacto }}</td>
                             <td>
-                                <a href="{{ route('proveedores.show', $item) }}" class="btn btn-sm btn-info">Ver</a>
-                                <a href="{{ route('proveedores.edit', $item) }}" class="btn btn-sm btn-primary">Editar</a>
-                                <form action="{{ route('proveedores.destroy', $item) }}" method="POST" style="display:inline" class="confirm-delete">
+                                <a href="{{ route('proveedores.show', ['proveedor' => $item->id]) }}" class="btn btn-sm btn-info">Ver</a>
+                                <a href="{{ route('proveedores.edit', ['proveedor' => $item->id]) }}" class="btn btn-sm btn-primary">Editar</a>
+                                @can('delete-records')
+                                <form action="{{ route('proveedores.destroy', ['proveedor' => $item->id]) }}" method="POST" style="display:inline" class="confirm-delete">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-danger">Eliminar</button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @empty
@@ -52,3 +56,20 @@
     <div class="mt-3">{{ $items->links() }}</div>
 </div>
 @endsection
+
+@push('js')
+<script>
+    $(function () {
+        $('.table').DataTable({
+            paging: false,
+            info: false,
+            lengthChange: false,
+            language: {
+                search: 'Buscar:',
+                zeroRecords: 'No se encontraron coincidencias',
+                infoEmpty: 'Sin registros disponibles'
+            }
+        });
+    });
+</script>
+@endpush

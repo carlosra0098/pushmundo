@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Proveedores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ProveedoresController extends Controller
 {
@@ -58,6 +59,10 @@ class ProveedoresController extends Controller
 
     public function destroy($id)
     {
+        if (auth()->check() && Gate::denies('delete-records')) {
+            abort(403, 'No tienes permisos para eliminar.');
+        }
+
         // Resolver el proveedor explícitamente para evitar problemas con el binding
         \Illuminate\Support\Facades\Log::info('Destroy called for proveedor id param: '.$id);
 
@@ -92,6 +97,10 @@ class ProveedoresController extends Controller
 
     public function forzarEliminar($id)
     {
+        if (auth()->check() && Gate::denies('delete-records')) {
+            abort(403, 'No tienes permisos para eliminar.');
+        }
+
         $proveedor = Proveedores::onlyTrashed()->findOrFail($id);
         $proveedor->forceDelete();
         return redirect()->route('proveedores.eliminados')->with('success', 'Proveedor eliminado permanentemente.');

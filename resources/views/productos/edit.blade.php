@@ -10,7 +10,7 @@
 
     <div class="card crm-card mt-3">
         <div class="card-body">
-            <form action="{{ route('productos.update', $item) }}" method="POST">
+            <form action="{{ route('productos.update', $item) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -57,6 +57,32 @@
                         @endforeach
                     </select>
                     @error('proveedor_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Imagen del producto</label>
+                    @if($item->imagen_url)
+                        <div class="mb-2">
+                            <img src="{{ $item->imagen_url }}" alt="Imagen actual" width="72" height="72" class="rounded object-fit-cover">
+                        </div>
+                    @endif
+                    <input type="file" name="imagen" class="form-control @error('imagen') is-invalid @enderror" accept=".jpg,.jpeg,.png,.webp,image/*">
+                    @error('imagen')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ficha técnica (PDF)</label>
+                    @if($item->archivo_pdf_url)
+                        <div class="mb-2">
+                            <a href="{{ $item->archivo_pdf_url }}" target="_blank" class="btn btn-sm btn-outline-secondary">Ver PDF actual</a>
+                        </div>
+                    @endif
+                    <input type="file" name="archivo_pdf" class="form-control @error('archivo_pdf') is-invalid @enderror" accept=".pdf,application/pdf">
+                    @error('archivo_pdf')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

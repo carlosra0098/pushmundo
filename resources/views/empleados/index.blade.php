@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('plugins.Datatables', true)
+
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -34,10 +36,12 @@
                             <td>
                                 <a href="{{ route('empleados.show', $item) }}" class="btn btn-sm btn-info">Ver</a>
                                 <a href="{{ route('empleados.edit', $item) }}" class="btn btn-sm btn-primary">Editar</a>
+                                @can('delete-records')
                                 <form action="{{ route('empleados.destroy', $item) }}" method="POST" style="display:inline" class="confirm-delete">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-danger">Eliminar</button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @empty
@@ -54,3 +58,20 @@
     <div class="mt-3">{{ $items->links() }}</div>
 </div>
 @endsection
+
+@push('js')
+<script>
+    $(function () {
+        $('.table').DataTable({
+            paging: false,
+            info: false,
+            lengthChange: false,
+            language: {
+                search: 'Buscar:',
+                zeroRecords: 'No se encontraron coincidencias',
+                infoEmpty: 'Sin registros disponibles'
+            }
+        });
+    });
+</script>
+@endpush

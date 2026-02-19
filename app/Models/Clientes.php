@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Modelo de Clientes
@@ -21,6 +22,7 @@ class Clientes extends Model
         'email',
         'telefono',
         'direccion',
+        'foto',
     ];
 
     protected $dates = [
@@ -59,5 +61,32 @@ class Clientes extends Model
         return $query->where('nombre', 'like', "%{$search}%")
                      ->orWhere('apellido', 'like', "%{$search}%")
                      ->orWhere('email', 'like', "%{$search}%");
+    }
+
+    /**
+     * Obtiene URL pública normalizada de la foto.
+     */
+    public function getFotoUrlAttribute(): ?string
+    {
+        if (empty($this->foto)) {
+            return null;
+        }
+
+        $path = ltrim((string) $this->foto, '/');
+        $path = str_replace('\\', '/', $path);
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, 'storage/')) {
+            return '/' . $path;
+        }
+
+        if (str_starts_with($path, 'public/')) {
+            $path = substr($path, 7);
+        }
+
+        return '/storage/' . ltrim($path, '/');
     }
 }

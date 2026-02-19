@@ -8,12 +8,22 @@
             <p><strong>Cliente:</strong> {{ optional($item->cliente)->nombre }}</p>
             <p><strong>Fecha:</strong> {{ $item->fecha }}</p>
             <p><strong>Total:</strong> {{ $item->total }}</p>
+            <p>
+                <strong>PDF:</strong>
+                @if($item->archivo_pdf_url)
+                    <a href="{{ $item->archivo_pdf_url }}" target="_blank" class="btn btn-sm btn-outline-secondary ms-2">Abrir PDF</a>
+                @else
+                    <span class="text-muted">Sin archivo</span>
+                @endif
+            </p>
             <a href="{{ route('facturas.index') }}" class="btn btn-secondary">Volver</a>
-            <a href="{{ route('facturas.edit', $item) }}" class="btn btn-primary">Editar</a>
-            <form action="{{ route('facturas.destroy', $item) }}" method="POST" style="display:inline" class="confirm-delete">
+            <a href="{{ route('facturas.edit', ['factura' => $item->id]) }}" class="btn btn-primary">Editar</a>
+            @can('delete-records')
+            <form action="{{ route('facturas.destroy', ['factura' => $item->id]) }}" method="POST" style="display:inline" class="confirm-delete">
                 @csrf @method('DELETE')
                 <button class="btn btn-danger">Eliminar</button>
             </form>
+            @endcan
         </div>
     </div>
 </div>

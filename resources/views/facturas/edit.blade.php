@@ -6,7 +6,7 @@
 
     <div class="card mt-3">
         <div class="card-body">
-            <form action="{{ route('facturas.update', $item) }}" method="POST">
+            <form action="{{ route('facturas.update', ['factura' => $item->id]) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mb-3">
@@ -48,6 +48,19 @@
                     <label class="form-label">Estado</label>
                     <input type="text" name="estado" class="form-control @error('estado') is-invalid @enderror" value="{{ old('estado', $item->estado) }}">
                     @error('estado')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">PDF de la factura</label>
+                    @if($item->archivo_pdf_url)
+                        <div class="mb-2">
+                            <a href="{{ $item->archivo_pdf_url }}" target="_blank" class="btn btn-sm btn-outline-secondary">Ver PDF actual</a>
+                        </div>
+                    @endif
+                    <input type="file" name="archivo_pdf" class="form-control @error('archivo_pdf') is-invalid @enderror" accept=".pdf,application/pdf">
+                    @error('archivo_pdf')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

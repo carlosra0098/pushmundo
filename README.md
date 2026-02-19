@@ -1,140 +1,138 @@
 # PushMundo 🚀
 
-**Proyecto Laravel** con autenticación y panel administrativo basado en AdminLTE. Incluye entidades comunes (Clientes, Productos, Proveedores, Empleados, Facturas) y una estructura lista para desarrollo local.
+Sistema CRM desarrollado con Laravel + AdminLTE para gestión de clientes, productos, proveedores, empleados y facturas.
 
 ---
 
-## Descripción del proyecto 🔧
+## Funcionalidades implementadas ✅
 
-Aplicación web desarrollada con Laravel. Provee un sistema básico de autenticación, panel administrativo (AdminLTE) y scaffolding para modelos, migraciones, controladores, factories y seeders.
+- Autenticación y panel administrativo con AdminLTE.
+- CRUD completo de:
+	- Clientes
+	- Productos
+	- Proveedores
+	- Empleados
+	- Facturas
+- Soft delete, restauración y eliminación permanente.
+- DataTables en listados (búsqueda rápida) + paginación Laravel.
+- Gestión de roles:
+	- `admin`
+	- `usuario`
+- Permisos por rol:
+	- `admin`: puede eliminar y gestionar roles.
+	- `usuario`: crear/editar (sin acciones de eliminar).
+- Subida de archivos:
+	- Foto de cliente.
+	- Imagen y PDF en productos.
+	- PDF en facturas.
 
 ---
 
-## Requisitos para ejecutarlo ✅
+## Requisitos del entorno 🧰
 
-- PHP 8.0+ (recomendado 8.1/8.2)
+- PHP 8.1+ (8.2 recomendado)
 - Composer
-- Node.js (16+) y npm
-- Servidor de base de datos (MySQL / MariaDB)
-- XAMPP o similar en Windows
-- Extensiones de PHP: openssl, pdo, pdo_mysql, mbstring, tokenizer, xml, ctype, json, fileinfo
-- Git (opcional)
+- Node.js + npm
+- MySQL / MariaDB
+- XAMPP (Windows)
 
 ---
 
-## Pasos básicos de instalación (rápido) 📋
+## Instalación y arranque rápido ⚙️
 
-1. Crear el proyecto Laravel y moverte al directorio:
-
-```bash
-composer create-project laravel/laravel nombre_proyecto
-cd nombre_proyecto
-```
-
-2. Instalar Laravel UI (opcional para generar vistas de auth):
+1) Instalar dependencias:
 
 ```bash
-composer require laravel/ui
-```
-
-3. Generar vistas de autenticación con Bootstrap:
-
-```bash
-php artisan ui bootstrap --auth
-```
-
-- Cuando pregunte, confirme la sobrescritura de archivos si es necesario (responder `yes`).
-
-4. Instalar dependencias frontend:
-
-```bash
+composer install
 npm install
 ```
 
-5. Compilar assets para desarrollo:
-
-```bash
-npm run dev
-```
-
-6. Configurar la base de datos en el archivo `.env` (DB_DATABASE, DB_USERNAME, DB_PASSWORD, etc.) y generar clave de aplicación:
+2) Configurar entorno:
 
 ```bash
 cp .env.example .env
-# editar .env según correspondan los datos de BD
 php artisan key:generate
 ```
 
-7. Ejecutar migraciones:
+3) Configurar base de datos en `.env` (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`).
+
+4) Ejecutar migraciones y seeders:
 
 ```bash
 php artisan migrate
-```
-
-8. Instalar AdminLTE (panel administrativo):
-
-```bash
-composer require jeroennoten/laravel-adminlte
-```
-
-9. Instalar AdminLTE con tipo completo:
-
-```bash
-php artisan adminlte:install --type=full
-```
-
-10. Copiar/ajustar el layout principal (`app.blade.php`) desde el repo de AdminLTE si quieres usar el layout recomendado:
-
-- Repositorio: https://github.com/jeroennoten/Laravel-AdminLTE
-- Sustituir o adaptar `resources/views/layouts/app.blade.php` según instrucciones.
-
-11. Crear modelos con migración, controlador, factory y seeder de forma automática:
-
-```bash
-php artisan make:model NombreModelo -mcfs
-```
-
-- Esto crea: Modelo (-m), Migración (-m), Controlador (-c), Factory (-f) y Seeder (-s).
-
-
-### Comandos útiles adicionales 🔧
-
-- Levantar servidor de desarrollo:
-
-```bash
-php artisan serve
-# -> http://127.0.0.1:8000
-```
-
-- Ejecutar seeders (si los tienes):
-
-```bash
 php artisan db:seed
 ```
 
----
-
-## Usuario y contraseña de prueba (para desarrollo) 🧪
-
-Crea un usuario de prueba ejecutando un seeder o desde Tinker. Ejemplo (solo para desarrollo):
-
-- **Email:** `admin@example.com`
-- **Password:** `password` (cámbialo en producción)
-
-Ejemplo rápido con Tinker:
+5) Crear enlace de storage público:
 
 ```bash
-php artisan tinker
->>> \App\Models\User::factory()->create(["email" => "admin@example.com", "password" => bcrypt("password")]);
+php artisan storage:link
+```
+
+6) Levantar servidor:
+
+```bash
+php artisan serve
+```
+
+Abrir en navegador: `http://127.0.0.1:8000`
+
+---
+
+## Cuentas de prueba (roles) 🧪
+
+> Solo para entorno local/desarrollo.
+
+### Administrador
+- Email: `admin.demo@pushmundo.com`
+- Password: `AdminDemo123!`
+- Rol: `admin`
+
+### Usuario
+- Email: `usuario.demo@pushmundo.com`
+- Password: `UsuarioDemo123!`
+- Rol: `usuario`
+
+### Administrador adicional (si ya estaba creado)
+- Email: `admin@admin.com`
+- Password: `Admin12345!`
+- Rol: `admin`
+
+---
+
+## Gestión de roles 👥
+
+- Ruta: `/usuarios`
+- Visible para administradores.
+- Permite cambiar rol con botones:
+	- “Hacer Admin”
+	- “Hacer Usuario”
+
+---
+
+## Subida de archivos 📎
+
+- Cliente: foto en alta/edición.
+- Producto: imagen + ficha técnica PDF.
+- Factura: PDF adjunto en alta/edición.
+- Las URLs de media se generan en formato relativo (`/storage/...`) para evitar errores por host/puerto.
+
+---
+
+## Verificación rápida de calidad ✅
+
+```bash
+php artisan optimize:clear
+php artisan test
 ```
 
 ---
 
-## Notas finales ⚠️
+## Notas de seguridad ⚠️
 
-- Mantén las credenciales seguras en producción y no uses contraseñas débiles.
-- Revisa la documentación oficial de Laravel y de AdminLTE para opciones avanzadas y customización.
-- Las credenciales para entrar en la base de datos si las pide son Usuario: root y Contraseña: Carlos_0098
+- Cambia todas las contraseñas de prueba antes de pasar a producción.
+- No publiques credenciales reales en repositorios públicos.
+- Mantén `APP_DEBUG=false` en producción.
 
 ---
 

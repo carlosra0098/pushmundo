@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProveedoresController;
 use App\Http\Controllers\EmpleadosController;
 use App\Http\Controllers\FacturasController;
+use App\Http\Controllers\UsuariosController;
 
 // Ruta raíz - Redirigir a clientes
 Route::get('/', function () {
@@ -26,7 +27,8 @@ Route::get('productos-eliminados', [ProductosController::class, 'eliminados'])->
 Route::post('productos/{id}/restaurar', [ProductosController::class, 'restaurar'])->name('productos.restaurar');
 Route::delete('productos/{id}/forzar-eliminar', [ProductosController::class, 'forzarEliminar'])->name('productos.forzar-eliminar');
 
-Route::resource('proveedores', ProveedoresController::class);
+Route::resource('proveedores', ProveedoresController::class)
+    ->parameters(['proveedores' => 'proveedor']);
 Route::get('proveedores-eliminados', [ProveedoresController::class, 'eliminados'])->name('proveedores.eliminados');
 Route::post('proveedores/{id}/restaurar', [ProveedoresController::class, 'restaurar'])->name('proveedores.restaurar');
 Route::delete('proveedores/{id}/forzar-eliminar', [ProveedoresController::class, 'forzarEliminar'])->name('proveedores.forzar-eliminar');
@@ -48,4 +50,10 @@ Route::patch('profile', [App\Http\Controllers\ProfileController::class, 'update'
 Route::post('profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password')->middleware('auth');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Gestión de usuarios y roles (solo autenticados)
+Route::middleware('auth')->group(function () {
+    Route::get('usuarios', [UsuariosController::class, 'index'])->name('usuarios.index');
+    Route::patch('usuarios/{user}/role', [UsuariosController::class, 'updateRole'])->name('usuarios.update-role');
+});
 

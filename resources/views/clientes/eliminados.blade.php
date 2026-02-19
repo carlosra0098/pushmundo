@@ -68,8 +68,9 @@
                                                 <i class="fas fa-undo"></i> Restaurar
                                             </button>
                                         </form>
-                                        <form action="{{ route('clientes.forzar-eliminar', $cliente->id) }}" 
-                                              method="DELETE" 
+                                        @can('delete-records')
+                                            <form action="{{ route('clientes.forzar-eliminar', $cliente->id) }}" 
+                                                method="POST" 
                                               style="display:inline;">
                                             @csrf
                                             @method('DELETE')
@@ -80,6 +81,7 @@
                                                 <i class="fas fa-trash"></i> Eliminar Permanentemente
                                             </button>
                                         </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

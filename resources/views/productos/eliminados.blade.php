@@ -13,7 +13,9 @@
                 <td>{{ optional($item->proveedor)->nombre }}</td>
                 <td>
                     <form action="{{ route('productos.restaurar', $item->id) }}" method="POST" style="display:inline" class="confirm-restore">@csrf<button class="btn btn-sm btn-success">Restaurar</button></form>
+                    @can('delete-records')
                     <form action="{{ route('productos.forzar-eliminar', $item->id) }}" method="POST" style="display:inline" class="confirm-force">@csrf @method('DELETE')<button class="btn btn-sm btn-danger">Eliminar permanentemente</button></form>
+                    @endcan
                 </td>
             </tr>
         @endforeach

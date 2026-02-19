@@ -82,5 +82,10 @@
     }
     */
 
+    .pagination .page-link {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.875rem;
+    }
+
 </style>
 @endpush

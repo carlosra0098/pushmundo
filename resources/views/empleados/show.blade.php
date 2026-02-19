@@ -10,10 +10,12 @@
             <p><strong>Puesto:</strong> {{ $item->puesto }}</p>
             <a href="{{ route('empleados.index') }}" class="btn btn-secondary">Volver</a>
             <a href="{{ route('empleados.edit', $item) }}" class="btn btn-primary">Editar</a>
+            @can('delete-records')
             <form action="{{ route('empleados.destroy', $item) }}" method="POST" style="display:inline" class="confirm-delete">
                 @csrf @method('DELETE')
                 <button class="btn btn-danger">Eliminar</button>
             </form>
+            @endcan
         </div>
     </div>
 </div>

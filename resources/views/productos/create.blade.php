@@ -10,7 +10,7 @@
 
     <div class="card crm-card mt-3">
         <div class="card-body">
-            <form action="{{ route('productos.store') }}" method="POST">
+            <form action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="mb-3">
@@ -56,6 +56,22 @@
                         @endforeach
                     </select>
                     @error('proveedor_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Imagen del producto</label>
+                    <input type="file" name="imagen" class="form-control @error('imagen') is-invalid @enderror" accept=".jpg,.jpeg,.png,.webp,image/*">
+                    @error('imagen')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ficha técnica (PDF)</label>
+                    <input type="file" name="archivo_pdf" class="form-control @error('archivo_pdf') is-invalid @enderror" accept=".pdf,application/pdf">
+                    @error('archivo_pdf')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

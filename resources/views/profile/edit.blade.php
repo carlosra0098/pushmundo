@@ -17,6 +17,16 @@
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
+                    @if($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <form method="POST" action="{{ route('profile.update') }}" novalidate enctype="multipart/form-data">
                         @csrf
                         @method('PATCH')
@@ -37,7 +47,7 @@
                             <input id="avatar" name="avatar" type="file" accept="image/*" class="form-control">
                             @if($user->avatar)
                                 <div class="mt-2">
-                                    <img src="{{ $user->adminlte_image() }}" alt="Avatar" class="img-thumbnail" style="width:90px;height:90px;object-fit:cover;">
+                                    <img src="{{ $user->avatar_url ?? $user->adminlte_image() }}" alt="Avatar" class="img-thumbnail" style="width:90px;height:90px;object-fit:cover;">
                                 </div>
                             @endif
                         </div>
@@ -51,7 +61,7 @@
                     <hr>
 
                     <h5 class="mt-3">Avatar</h5>
-                    <p class="text-muted">Actualmente usamos Gravatar por defecto. Si quieres puedo integrar subida de avatar.</p>
+                    <p class="text-muted">Si no subes una imagen, se usa Gravatar por defecto.</p>
                 </div>
             </div>
         </div>

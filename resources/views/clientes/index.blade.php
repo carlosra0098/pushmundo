@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('plugins.Datatables', true)
+
 @section('content')
 <div class="container-fluid py-4">
     <div class="row mb-4">
@@ -36,6 +38,7 @@
                     <thead class="table-dark">
                         <tr>
                             <th><i class="fas fa-hashtag"></i> ID</th>
+                            <th><i class="fas fa-image"></i> Foto</th>
                             <th><i class="fas fa-user"></i> Nombre Completo</th>
                             <th><i class="fas fa-envelope"></i> Email</th>
                             <th><i class="fas fa-phone"></i> Teléfono</th>
@@ -46,6 +49,13 @@
                         @forelse ($clientes as $cliente)
                             <tr>
                                 <td class="fw-bold">{{ $cliente->id }}</td>
+                                <td>
+                                    @if($cliente->foto_url)
+                                        <img src="{{ $cliente->foto_url }}" alt="Foto de {{ $cliente->nombre_completo }}" width="42" height="42" class="rounded-circle object-fit-cover">
+                                    @else
+                                        <span class="text-muted">Sin foto</span>
+                                    @endif
+                                </td>
                                 <td>{{ $cliente->nombre_completo }}</td>
                                 <td>
                                     <a href="mailto:{{ $cliente->email }}">{{ $cliente->email }}</a>
@@ -60,6 +70,7 @@
                                            title="Editar cliente">
                                             <i class="fas fa-edit"></i> Editar
                                         </a>
+                                        @can('delete-records')
                                         <form action="{{ route('clientes.destroy', $cliente->id) }}" 
                                               method="POST" 
                                               style="display:inline;">
@@ -72,12 +83,13 @@
                                                 <i class="fas fa-trash"></i> Eliminar
                                             </button>
                                         </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-5">
+                                <td colspan="6" class="text-center py-5">
                                     <p class="text-muted mb-0">
                                         <i class="fas fa-inbox"></i> No hay clientes registrados aún.
                                     </p>
@@ -108,5 +120,22 @@
         display: flex;
     }
 </style>
+@endpush
+
+@push('js')
+<script>
+    $(function () {
+        $('.table').DataTable({
+            paging: false,
+            info: false,
+            lengthChange: false,
+            language: {
+                search: 'Buscar:',
+                zeroRecords: 'No se encontraron coincidencias',
+                infoEmpty: 'Sin registros disponibles'
+            }
+        });
+    });
+</script>
 @endpush
 @endsection

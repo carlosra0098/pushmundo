@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Clientes;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class ClientesController extends Controller
 {
@@ -50,7 +52,12 @@ class ClientesController extends Controller
                 'email' => 'required|email|unique:clientes,email|max:100',
                 'telefono' => 'required|regex:/^[\d\s\-\+\(\)]+$/|min:7|max:20',
                 'direccion' => 'nullable|string|max:255',
+                'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             ], $this->getCustomMessages());
+
+            if ($request->hasFile('foto')) {
+                $validated['foto'] = $request->file('foto')->store('clientes/fotos', 'public');
+            }
 
             // Crear el nuevo cliente
             Clientes::create($validated);
@@ -100,7 +107,28 @@ class ClientesController extends Controller
                 'email' => 'required|email|max:100|unique:clientes,email,' . $id,
                 'telefono' => 'required|regex:/^[\d\s\-\+\(\)]+$/|min:7|max:20',
                 'direccion' => 'nullable|string|max:255',
+                'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             ], $this->getCustomMessages());
+
+            if ($request->hasFile('foto')) {
+                if (!empty($cliente->foto)) {
+                    $oldPath = ltrim((string) $cliente->foto, '/');
+
+                    if (str_starts_with($oldPath, 'storage/')) {
+                        $oldPath = substr($oldPath, 8);
+                    }
+
+                    if (str_starts_with($oldPath, 'public/')) {
+                        $oldPath = substr($oldPath, 7);
+                    }
+
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
+                    }
+                }
+
+                $validated['foto'] = $request->file('foto')->store('clientes/fotos', 'public');
+            }
 
             // Actualizar el cliente
             $cliente->update($validated);
@@ -126,6 +154,10 @@ class ClientesController extends Controller
     public function destroy($id)
     {
         try {
+            if (auth()->check() && Gate::denies('delete-records')) {
+                abort(403, 'No tienes permisos para eliminar.');
+            }
+
             $cliente = Clientes::findOrFail($id);
             $nombreCliente = $cliente->nombre . ' ' . $cliente->apellido;
 
@@ -191,9 +223,29 @@ class ClientesController extends Controller
     public function forzarEliminar($id)
     {
         try {
+            if (auth()->check() && Gate::denies('delete-records')) {
+                abort(403, 'No tienes permisos para eliminar.');
+            }
+
             // Buscar cliente eliminado (solo)
             $cliente = Clientes::onlyTrashed()->findOrFail($id);
             $nombreCliente = $cliente->nombre_completo;
+
+            if (!empty($cliente->foto)) {
+                $oldPath = ltrim((string) $cliente->foto, '/');
+
+                if (str_starts_with($oldPath, 'storage/')) {
+                    $oldPath = substr($oldPath, 8);
+                }
+
+                if (str_starts_with($oldPath, 'public/')) {
+                    $oldPath = substr($oldPath, 7);
+                }
+
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
 
             // Eliminar permanentemente
             $cliente->forceDelete();
@@ -238,6 +290,10 @@ class ClientesController extends Controller
             
             'direccion.string' => 'La dirección debe ser texto.',
             'direccion.max' => 'La dirección no puede exceder 255 caracteres.',
+
+            'foto.image' => 'La foto debe ser una imagen válida.',
+            'foto.mimes' => 'La foto debe estar en formato JPG, JPEG, PNG o WEBP.',
+            'foto.max' => 'La foto no puede superar 2MB.',
         ];
     }
 }
